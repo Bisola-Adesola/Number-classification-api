@@ -4,7 +4,7 @@ import math
 import logging
 import os
 
-application = Flask(__name__)  # Corrected __name__
+application = Flask(__name__)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
