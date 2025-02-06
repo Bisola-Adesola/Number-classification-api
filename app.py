@@ -4,15 +4,15 @@ import math
 import logging
 import os
 
-app = Flask(__name__)  # Corrected __name__
+application = Flask(__name__)  # Corrected __name__
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 
-# Welcome Route for Stage 0
-@app.route('/')
+# Welcome Route for Stage 1
+@application.route('/')
 def welcome():
-    return "Welcome to DevOps Stage 0"
+    return "Welcome to DevOps Stage 1"
 
 def is_prime(n):
     """Check if a number is prime."""
@@ -37,7 +37,7 @@ def is_perfect(n):
 def is_armstrong(n):
     """Check if a number is an Armstrong number."""
     if n < 0:
-        return False  # Armstrong numbers are usually positive
+        return False 
     digits = [int(d) for d in str(n)]
     power = len(digits)
     return sum(d ** power for d in digits) == n
@@ -53,7 +53,7 @@ def get_fun_fact(n):
         return "No fun fact available"
     return "No fun fact available"
 
-@app.route('/api/classify-number', methods=['GET'])
+@application.route('/api/classify-number', methods=['GET'])
 def classify_number():
     number_str = request.args.get('number')
 
@@ -75,13 +75,13 @@ def classify_number():
         "is_prime": is_prime(number),
         "is_perfect": is_perfect(number),
         "properties": properties,
-        "digit_sum": sum(int(d) for d in str(abs(number))),  # Handle negative numbers
+        "digit_sum": sum(int(d) for d in str(abs(number))), 
         "fun_fact": get_fun_fact(number)
     }
 
-    return jsonify(result), 200  # Corrected indentation
+    return jsonify(result), 200 
 
-if __name__ == '__main__':  # Corrected __name__
+if __name__ == '__main__': 
     debug_mode = os.getenv("FLASK_DEBUG", "false").lower() == "true"
-    app.run(debug=debug_mode)
+    application.run(debug=debug_mode)
  
