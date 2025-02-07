@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import requests
 import math
 import logging
 import os
 
 application = Flask(__name__)
+CORS(application)  # Enable CORS
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -43,15 +45,17 @@ def is_armstrong(n):
     return sum(d ** power for d in digits) == n
 
 def get_fun_fact(n):
-    """Fetch a fun fact from the Numbers API."""
+    """Fetch a fun fact from the Numbers API with a timeout and default response."""
     try:
         response = requests.get(f"http://numbersapi.com/{n}/math?json", timeout=5)
         if response.status_code == 200:
             return response.json().get("text", "No fun fact available")
+    except requests.exceptions.Timeout:
+        logging.error(f"Timeout occurred while fetching fun fact for {n}")
+        return "No fun fact available (timeout)"
     except requests.exceptions.RequestException as e:
         logging.error(f"Failed to fetch fun fact for {n}: {e}")
-        return "No fun fact available"
-    return "No fun fact available"
+        return "No fun fact available (error)"
 
 @application.route('/api/classify-number', methods=['GET'])
 def classify_number():
@@ -83,5 +87,4 @@ def classify_number():
 
 if __name__ == '__main__': 
     debug_mode = os.getenv("FLASK_DEBUG", "false").lower() == "true"
-    application.run(debug=debug_mode)
- 
+    application.run(host='0.0.0.0', port=5000, debug=debug_mode)
